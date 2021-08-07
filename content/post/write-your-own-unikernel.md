@@ -1,5 +1,5 @@
 ---
-title: "Write Your Own Unikernel"
+title: "使用Go语言编写自己的内核"
 date: 2021-08-08T01:05:45+08:00
 draft: false
 ---
@@ -99,6 +99,8 @@ $ egg run
 在 `图形与动画` 这个例子里面我们展示了如何将内核打包成一个 iso 文件，这个 iso 文件包含了引导程序，因此可以被真机识别并加载运行。
 
 我们让裸机运行 iso 文件的通常的做法是把 iso 文件烧录到 U 盘或者移动硬盘里面，之后使用 U 盘或者移动硬盘插到电脑上，选择启动项运行。但在这里笔者推荐使用 [ventoy](https://www.ventoy.net/)来做启动盘，ventoy 只会格式化 U 盘一次，之后只用拷贝 iso 文件即可，非常方便。这是笔者在真机上的截图。
+
+![bare-metal](https://i.imgur.com/YDlowOQ.gif)
 
 # 结语
 
