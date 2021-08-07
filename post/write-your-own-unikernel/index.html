@@ -2,7 +2,7 @@
 <head>
 <meta charset=utf-8>
 <meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<title>Write Your Own Unikernel - icexin的站点</title>
+<title>使用Go语言编写自己的内核 - icexin的站点</title>
 <meta name=renderer content="webkit">
 <meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta http-equiv=cache-control content="no-transform">
@@ -21,18 +21,18 @@
 <link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5>
 <link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet>
 <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous>
-<meta property="og:title" content="Write Your Own Unikernel">
+<meta property="og:title" content="使用Go语言编写自己的内核">
 <meta property="og:description" content="前言 在编写eggos的过程中，我发现刨去内核代码，主程序代码其实就是一个普通的 Go 程序，跟其他 Go 程序一样从 main 函数进去，只不过从来不返回。 因此我">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://icexin.com/post/write-your-own-unikernel/"><meta property="article:section" content="post">
 <meta property="article:published_time" content="2021-08-08T01:05:45+08:00">
 <meta property="article:modified_time" content="2021-08-08T01:05:45+08:00">
-<meta itemprop=name content="Write Your Own Unikernel">
+<meta itemprop=name content="使用Go语言编写自己的内核">
 <meta itemprop=description content="前言 在编写eggos的过程中，我发现刨去内核代码，主程序代码其实就是一个普通的 Go 程序，跟其他 Go 程序一样从 main 函数进去，只不过从来不返回。 因此我"><meta itemprop=datePublished content="2021-08-08T01:05:45+08:00">
 <meta itemprop=dateModified content="2021-08-08T01:05:45+08:00">
 <meta itemprop=wordCount content="1392">
 <meta itemprop=keywords content><meta name=twitter:card content="summary">
-<meta name=twitter:title content="Write Your Own Unikernel">
+<meta name=twitter:title content="使用Go语言编写自己的内核">
 <meta name=twitter:description content="前言 在编写eggos的过程中，我发现刨去内核代码，主程序代码其实就是一个普通的 Go 程序，跟其他 Go 程序一样从 main 函数进去，只不过从来不返回。 因此我"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
 <script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]-->
 </head>
@@ -88,7 +88,7 @@
 <div id=content class=content>
 <article class=post>
 <header class=post-header>
-<h1 class=post-title>Write Your Own Unikernel</h1>
+<h1 class=post-title>使用Go语言编写自己的内核</h1>
 <div class=post-meta>
 <span class=post-time> 2021-08-08 </span>
 </div>
@@ -213,6 +213,7 @@ $ egg run
 </div><h1 id=将内核运行在真机上>将内核运行在真机上</h1>
 <p>在 <code>图形与动画</code> 这个例子里面我们展示了如何将内核打包成一个 iso 文件，这个 iso 文件包含了引导程序，因此可以被真机识别并加载运行。</p>
 <p>我们让裸机运行 iso 文件的通常的做法是把 iso 文件烧录到 U 盘或者移动硬盘里面，之后使用 U 盘或者移动硬盘插到电脑上，选择启动项运行。但在这里笔者推荐使用 <a href=https://www.ventoy.net/>ventoy</a>来做启动盘，ventoy 只会格式化 U 盘一次，之后只用拷贝 iso 文件即可，非常方便。这是笔者在真机上的截图。</p>
+<p><img src=https://i.imgur.com/YDlowOQ.gif alt=bare-metal></p>
 <h1 id=结语>结语</h1>
 <p>借助于 Go 语言的包管理功能，我们成功提供了一个 <code>libos</code> 的 Go 语言实现，让普通 Go 程序也可以跑在裸机上，这是一个非常有趣的尝试，我后面希望硬件驱动之类的也可以模块化，大家在 eggos 这个 unikernel 框架下定制自己的内核像 import 普通 Go package 一样简单！感谢阅读！</p>
 </div>
