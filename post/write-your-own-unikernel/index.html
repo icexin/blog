@@ -2,7 +2,7 @@
 <head>
 <meta charset=utf-8>
 <meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<title>使用Go语言编写自己的内核 - icexin的站点</title>
+<title>将Go程序跑在裸机上之LibOS - icexin的站点</title>
 <meta name=renderer content="webkit">
 <meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta http-equiv=cache-control content="no-transform">
@@ -11,7 +11,7 @@
 <meta name=msapplication-navbutton-color content="#f8f5ec">
 <meta name=apple-mobile-web-app-capable content="yes">
 <meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec">
-<meta name=author content="icexin"><meta name=description content="前言 在编写eggos的过程中，我发现刨去内核代码，主程序代码其实就是一个普通的 Go 程序，跟其他 Go 程序一样从 main 函数进去，只不过从来不返回。 因此我"><meta name=keywords content="golang,os,blockchain">
+<meta name=author content="icexin"><meta name=description content="前言 之前我写过一篇探索在裸机上运行 Go 程序的文章，里面介绍了在裸机上运行 Go 代码需要的技术，顺便介绍了 eggos，一个运行于裸机的 unikern"><meta name=keywords content="golang,os,blockchain">
 <meta name=generator content="Hugo 0.87.0 with theme even">
 <link rel=canonical href=https://icexin.com/post/write-your-own-unikernel/>
 <link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
@@ -21,19 +21,19 @@
 <link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5>
 <link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet>
 <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin=anonymous>
-<meta property="og:title" content="使用Go语言编写自己的内核">
-<meta property="og:description" content="前言 在编写eggos的过程中，我发现刨去内核代码，主程序代码其实就是一个普通的 Go 程序，跟其他 Go 程序一样从 main 函数进去，只不过从来不返回。 因此我">
+<meta property="og:title" content="将Go程序跑在裸机上之LibOS">
+<meta property="og:description" content="前言 之前我写过一篇探索在裸机上运行 Go 程序的文章，里面介绍了在裸机上运行 Go 代码需要的技术，顺便介绍了 eggos，一个运行于裸机的 unikern">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://icexin.com/post/write-your-own-unikernel/"><meta property="article:section" content="post">
 <meta property="article:published_time" content="2021-08-08T01:05:45+08:00">
 <meta property="article:modified_time" content="2021-08-08T01:05:45+08:00">
-<meta itemprop=name content="使用Go语言编写自己的内核">
-<meta itemprop=description content="前言 在编写eggos的过程中，我发现刨去内核代码，主程序代码其实就是一个普通的 Go 程序，跟其他 Go 程序一样从 main 函数进去，只不过从来不返回。 因此我"><meta itemprop=datePublished content="2021-08-08T01:05:45+08:00">
+<meta itemprop=name content="将Go程序跑在裸机上之LibOS">
+<meta itemprop=description content="前言 之前我写过一篇探索在裸机上运行 Go 程序的文章，里面介绍了在裸机上运行 Go 代码需要的技术，顺便介绍了 eggos，一个运行于裸机的 unikern"><meta itemprop=datePublished content="2021-08-08T01:05:45+08:00">
 <meta itemprop=dateModified content="2021-08-08T01:05:45+08:00">
-<meta itemprop=wordCount content="1392">
+<meta itemprop=wordCount content="1503">
 <meta itemprop=keywords content><meta name=twitter:card content="summary">
-<meta name=twitter:title content="使用Go语言编写自己的内核">
-<meta name=twitter:description content="前言 在编写eggos的过程中，我发现刨去内核代码，主程序代码其实就是一个普通的 Go 程序，跟其他 Go 程序一样从 main 函数进去，只不过从来不返回。 因此我"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<meta name=twitter:title content="将Go程序跑在裸机上之LibOS">
+<meta name=twitter:description content="前言 之前我写过一篇探索在裸机上运行 Go 程序的文章，里面介绍了在裸机上运行 Go 代码需要的技术，顺便介绍了 eggos，一个运行于裸机的 unikern"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
 <script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]-->
 </head>
 <body>
@@ -88,7 +88,7 @@
 <div id=content class=content>
 <article class=post>
 <header class=post-header>
-<h1 class=post-title>使用Go语言编写自己的内核</h1>
+<h1 class=post-title>将Go程序跑在裸机上之LibOS</h1>
 <div class=post-meta>
 <span class=post-time> 2021-08-08 </span>
 </div>
@@ -117,9 +117,10 @@
 </div>
 <div class=post-content>
 <h1 id=前言>前言</h1>
+<p>之前我写过一篇探索在裸机上运行 Go 程序的<a href=https://zhuanlan.zhihu.com/p/265806072>文章</a>，里面介绍了在裸机上运行 Go 代码需要的技术，顺便介绍了 eggos，一个运行于裸机的 unikernel。</p>
 <p>在编写<a href=https://github.com/icexin/eggos>eggos</a>的过程中，我发现刨去内核代码，主程序代码其实就是一个普通的 Go 程序，跟其他 Go 程序一样从 <code>main</code> 函数进去，只不过从来不返回。</p>
-<p>因此我把 eggos 的 kernel 抽离出来，作为一个单独的库，其他应用程序只要写下 <code>import _ "github.com/icexin/eggos"</code>，即可像 eggos 一样运行在裸机上。</p>
-<p>然而 eggos 内核的代码虽然是一个普通的 Go 程序，但编译过程还是有很多复杂的参数，因此我把这些编译过程封装了一下，编写了一个叫 <code>egg</code> 的程序，用这个程序来编译，打包，运行你自己编写的 Go 语言编写内核。</p>
+<p>那能不能让其他普通程序也运行于裸机呢？因此我把 eggos 的 kernel 抽离出来，作为一个单独的库，其他应用程序只要写下 <code>import _ "github.com/icexin/eggos"</code>，即可像 eggos 一样运行在裸机上。</p>
+<p>即使是一个普通的 Go 程序，要在裸机上运行，编译过程还是有很多复杂的参数，因此我把这些编译过程封装了一下，编写了一个叫 <code>egg</code> 的程序，用这个程序来编译，打包，运行你自己编写的 Go 语言编写内核。</p>
 <h1 id=使用go语言编写自己的unikernel>使用Go语言编写自己的unikernel</h1>
 <p>eggos 的主仓库里面带了几个示范的例子，在 <a href=https://github.com/icexin/eggos/tree/main/app/examples>examples</a> 目录下，下面一一介绍这些例子。</p>
 <p>其中需要注意的是，机器的环境准备如下：</p>
@@ -128,9 +129,9 @@
 <li>Qemu模拟器</li>
 </ul>
 <p><code>egg</code>程序可以从 eggos 的 <a href=https://github.com/icexin/eggos/releases>Release</a> 页面下载，或者运行 <code>go install github.com/icexin/eggos/cmd/egg@latest</code> 得到。</p>
-<p>我们的例子都是在 qemu 模拟器里面运行，如果想在真实的机器上运行这些例子，可以参考动画那个例子，使用 iso 在真机上运行。</p>
+<p>我们的例子都是在 qemu 模拟器里面运行，如果想在真实的机器上运行这些例子，可以参考动画那个例子，使用 iso 镜像在真机上运行。</p>
 <h2 id=hello-eggos>Hello Eggos</h2>
-<p>代码在 <a href=https://github.com/icexin/eggos/tree/main/app/examples/helloworld>hello world</a></p>
+<p>代码在 <a href=https://github.com/icexin/eggos/tree/main/app/examples/helloworld/main.go>hello world</a></p>
 <p>第一个例子比较简单，就是简单输出 <code>hello eggos</code>，用来检查你的环境是否准备完毕</p>
 <div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
@@ -143,6 +144,7 @@ $ egg run
 </code></pre></td></tr></table>
 </div>
 </div><h2 id=concurrent-prime-sieve>Concurrent prime sieve</h2>
+<p>代码在 <a href=https://github.com/icexin/eggos/tree/main/app/examples/prime-sieve/main.go>prime sieve</a></p>
 <p>第二个例子是 Go 官网经典的并发筛选素数的算法，这个例子展示了 eggos 使用 goroutine 的能力。</p>
 <div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
@@ -155,6 +157,7 @@ $ egg run
 </code></pre></td></tr></table>
 </div>
 </div><h2 id=http-服务器>HTTP 服务器</h2>
+<p>代码在 <a href=https://github.com/icexin/eggos/tree/main/app/examples/httpd/main.go>http server</a></p>
 <p>第三个例子展示的是 eggos 的网络栈，可以运行 Go 标准库里面的 <code>http</code> 包</p>
 <div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
@@ -169,6 +172,7 @@ $ egg run -p 8000:8000
 </div><p>打开浏览器，输入 http://127.0.0.1:8000/hello 即可访问。</p>
 <p>因为我们是在 qemu 里面运行，因此做了端口映射，如果是裸机上运行，把 <code>127.0.0.1</code>替换成机器 IP 即可。</p>
 <h2 id=交互式程序>交互式程序</h2>
+<p>代码在 <a href=https://github.com/icexin/eggos/tree/main/app/examples/repl/main.go>repl</a></p>
 <p>第四个例子展示了 eggos 的使用输入输出编写交互程序的例子，这个例子通过获取用户输入的字符串，计算其 <code>sha1</code>值，并输出到屏幕。</p>
 <div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
@@ -182,6 +186,7 @@ $ egg run
 </div>
 </div><p>通过关闭 qemu 的窗口即可关闭程序。</p>
 <h2 id=图形与动画>图形与动画</h2>
+<p>代码在 <a href=https://github.com/icexin/eggos/tree/main/app/examples/graphic/main.go>graphic</a></p>
 <p>第五个例子展示了 eggos 操作图像的能力。Go 的标准库里面的 <code>image</code> 有基础的图形处理能力，eggos 借助 <code>frame buffer</code>，具备基础的处理图像的能力。</p>
 <p>这个例子的代码是从 《Go程序设计语言》里面借鉴来的，本来的例子是生成一个 <a href=https://zh.wikipedia.org/zh-hans/%E5%88%A9%E8%90%A8%E8%8C%B9%E6%9B%B2%E7%BA%BF>利萨茹曲线 (Lissajous curve)</a>
 的 GIF 动图，这里进行少稍微的改造，形成屏幕上的动画。</p>
@@ -199,6 +204,7 @@ $ egg run graphic.iso
 </code></pre></td></tr></table>
 </div>
 </div><h2 id=hack-系统调用>Hack 系统调用</h2>
+<p>代码在 <a href=https://github.com/icexin/eggos/tree/main/app/examples/syscall/main.go>syscall</a></p>
 <p>eggos 本身只包含了一些基础Linux系统调用，来让 Go 的 runtime 能正常运行，但是一些第三方库如果使用了 eggos 没有提供的系统调用可能不可以正常运行，因此 eggos 提供了自助注册系统调用的能力。 这个例子展示了如何自助注册系统调用。</p>
 <div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
@@ -212,7 +218,7 @@ $ egg run
 </div>
 </div><h1 id=将内核运行在真机上>将内核运行在真机上</h1>
 <p>在 <code>图形与动画</code> 这个例子里面我们展示了如何将内核打包成一个 iso 文件，这个 iso 文件包含了引导程序，因此可以被真机识别并加载运行。</p>
-<p>我们让裸机运行 iso 文件的通常的做法是把 iso 文件烧录到 U 盘或者移动硬盘里面，之后使用 U 盘或者移动硬盘插到电脑上，选择启动项运行。但在这里笔者推荐使用 <a href=https://www.ventoy.net/>ventoy</a>来做启动盘，ventoy 只会格式化 U 盘一次，之后只用拷贝 iso 文件即可，非常方便。这是笔者在真机上的截图。</p>
+<p>我们让裸机运行 iso 文件的通常的做法是把 iso 文件烧录到 U 盘或者移动硬盘里面，之后使用 U 盘或者移动硬盘插到电脑上，选择启动项运行。但在这里我推荐使用 <a href=https://www.ventoy.net/>ventoy</a>来做启动盘，ventoy 只会格式化 U 盘一次，之后只用拷贝 iso 文件即可，非常方便。这是我在真机上的截图。</p>
 <p><img src=https://i.imgur.com/YDlowOQ.gif alt=bare-metal></p>
 <h1 id=结语>结语</h1>
 <p>借助于 Go 语言的包管理功能，我们成功提供了一个 <code>libos</code> 的 Go 语言实现，让普通 Go 程序也可以跑在裸机上，这是一个非常有趣的尝试，我后面希望硬件驱动之类的也可以模块化，大家在 eggos 这个 unikernel 框架下定制自己的内核像 import 普通 Go package 一样简单！感谢阅读！</p>
