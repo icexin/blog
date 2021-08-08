@@ -1,16 +1,18 @@
 ---
-title: "使用Go语言编写自己的内核"
+title: "将Go程序跑在裸机上之LibOS"
 date: 2021-08-08T01:05:45+08:00
 draft: false
 ---
 
 # 前言
 
+之前我写过一篇探索在裸机上运行 Go 程序的[文章](https://zhuanlan.zhihu.com/p/265806072)，里面介绍了在裸机上运行 Go 代码需要的技术，顺便介绍了 eggos，一个运行于裸机的 unikernel。
+
 在编写[eggos](https://github.com/icexin/eggos)的过程中，我发现刨去内核代码，主程序代码其实就是一个普通的 Go 程序，跟其他 Go 程序一样从 `main` 函数进去，只不过从来不返回。
 
-因此我把 eggos 的 kernel 抽离出来，作为一个单独的库，其他应用程序只要写下 `import _ "github.com/icexin/eggos"`，即可像 eggos 一样运行在裸机上。
+那能不能让其他普通程序也运行于裸机呢？因此我把 eggos 的 kernel 抽离出来，作为一个单独的库，其他应用程序只要写下 `import _ "github.com/icexin/eggos"`，即可像 eggos 一样运行在裸机上。
 
-然而 eggos 内核的代码虽然是一个普通的 Go 程序，但编译过程还是有很多复杂的参数，因此我把这些编译过程封装了一下，编写了一个叫 `egg` 的程序，用这个程序来编译，打包，运行你自己编写的 Go 语言编写内核。
+即使是一个普通的 Go 程序，要在裸机上运行，编译过程还是有很多复杂的参数，因此我把这些编译过程封装了一下，编写了一个叫 `egg` 的程序，用这个程序来编译，打包，运行你自己编写的 Go 语言编写内核。
 
 # 使用Go语言编写自己的unikernel
 
@@ -23,12 +25,12 @@ eggos 的主仓库里面带了几个示范的例子，在 [examples](https://git
 
 `egg`程序可以从 eggos 的 [Release](https://github.com/icexin/eggos/releases) 页面下载，或者运行 `go install github.com/icexin/eggos/cmd/egg@latest` 得到。
 
-我们的例子都是在 qemu 模拟器里面运行，如果想在真实的机器上运行这些例子，可以参考动画那个例子，使用 iso 在真机上运行。
+我们的例子都是在 qemu 模拟器里面运行，如果想在真实的机器上运行这些例子，可以参考动画那个例子，使用 iso 镜像在真机上运行。
 
 
 ## Hello Eggos
 
-代码在 [hello world](https://github.com/icexin/eggos/tree/main/app/examples/helloworld)
+代码在 [hello world](https://github.com/icexin/eggos/tree/main/app/examples/helloworld/main.go)
 
 第一个例子比较简单，就是简单输出 `hello eggos`，用来检查你的环境是否准备完毕
 
@@ -39,6 +41,8 @@ $ egg run
 
 ## Concurrent prime sieve
 
+代码在 [prime sieve](https://github.com/icexin/eggos/tree/main/app/examples/prime-sieve/main.go)
+
 第二个例子是 Go 官网经典的并发筛选素数的算法，这个例子展示了 eggos 使用 goroutine 的能力。
 
 ``` sh
@@ -47,6 +51,8 @@ $ egg run
 ```
 
 ## HTTP 服务器
+
+代码在 [http server](https://github.com/icexin/eggos/tree/main/app/examples/httpd/main.go)
 
 第三个例子展示的是 eggos 的网络栈，可以运行 Go 标准库里面的 `http` 包
 
@@ -61,6 +67,8 @@ $ egg run -p 8000:8000
 
 ## 交互式程序
 
+代码在 [repl](https://github.com/icexin/eggos/tree/main/app/examples/repl/main.go)
+
 第四个例子展示了 eggos 的使用输入输出编写交互程序的例子，这个例子通过获取用户输入的字符串，计算其 `sha1`值，并输出到屏幕。
 
 ``` sh
@@ -71,6 +79,8 @@ $ egg run
 通过关闭 qemu 的窗口即可关闭程序。
 
 ## 图形与动画
+
+代码在 [graphic](https://github.com/icexin/eggos/tree/main/app/examples/graphic/main.go)
 
 第五个例子展示了 eggos 操作图像的能力。Go 的标准库里面的 `image` 有基础的图形处理能力，eggos 借助 `frame buffer`，具备基础的处理图像的能力。
 
@@ -87,6 +97,8 @@ $ egg run graphic.iso
 
 ## Hack 系统调用
 
+代码在 [syscall](https://github.com/icexin/eggos/tree/main/app/examples/syscall/main.go)
+
 eggos 本身只包含了一些基础Linux系统调用，来让 Go 的 runtime 能正常运行，但是一些第三方库如果使用了 eggos 没有提供的系统调用可能不可以正常运行，因此 eggos 提供了自助注册系统调用的能力。 这个例子展示了如何自助注册系统调用。
 
 ``` sh
@@ -98,7 +110,7 @@ $ egg run
 
 在 `图形与动画` 这个例子里面我们展示了如何将内核打包成一个 iso 文件，这个 iso 文件包含了引导程序，因此可以被真机识别并加载运行。
 
-我们让裸机运行 iso 文件的通常的做法是把 iso 文件烧录到 U 盘或者移动硬盘里面，之后使用 U 盘或者移动硬盘插到电脑上，选择启动项运行。但在这里笔者推荐使用 [ventoy](https://www.ventoy.net/)来做启动盘，ventoy 只会格式化 U 盘一次，之后只用拷贝 iso 文件即可，非常方便。这是笔者在真机上的截图。
+我们让裸机运行 iso 文件的通常的做法是把 iso 文件烧录到 U 盘或者移动硬盘里面，之后使用 U 盘或者移动硬盘插到电脑上，选择启动项运行。但在这里我推荐使用 [ventoy](https://www.ventoy.net/)来做启动盘，ventoy 只会格式化 U 盘一次，之后只用拷贝 iso 文件即可，非常方便。这是我在真机上的截图。
 
 ![bare-metal](https://i.imgur.com/YDlowOQ.gif)
 
