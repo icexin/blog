@@ -30,7 +30,7 @@
 <meta itemprop=name content="将Go程序跑在裸机上之LibOS">
 <meta itemprop=description content="前言 之前我写过一篇探索在裸机上运行 Go 程序的文章，里面介绍了在裸机上运行 Go 代码需要的技术，顺便介绍了 eggos，一个运行于裸机的 unikern"><meta itemprop=datePublished content="2021-08-08T01:05:45+08:00">
 <meta itemprop=dateModified content="2021-08-08T01:05:45+08:00">
-<meta itemprop=wordCount content="1503">
+<meta itemprop=wordCount content="1501">
 <meta itemprop=keywords content><meta name=twitter:card content="summary">
 <meta name=twitter:title content="将Go程序跑在裸机上之LibOS">
 <meta name=twitter:description content="前言 之前我写过一篇探索在裸机上运行 Go 程序的文章，里面介绍了在裸机上运行 Go 代码需要的技术，顺便介绍了 eggos，一个运行于裸机的 unikern"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
@@ -120,7 +120,7 @@
 <p>之前我写过一篇探索在裸机上运行 Go 程序的<a href=https://zhuanlan.zhihu.com/p/265806072>文章</a>，里面介绍了在裸机上运行 Go 代码需要的技术，顺便介绍了 eggos，一个运行于裸机的 unikernel。</p>
 <p>在编写<a href=https://github.com/icexin/eggos>eggos</a>的过程中，我发现刨去内核代码，主程序代码其实就是一个普通的 Go 程序，跟其他 Go 程序一样从 <code>main</code> 函数进去，只不过从来不返回。</p>
 <p>那能不能让其他普通程序也运行于裸机呢？因此我把 eggos 的 kernel 抽离出来，作为一个单独的库，其他应用程序只要写下 <code>import _ "github.com/icexin/eggos"</code>，即可像 eggos 一样运行在裸机上。</p>
-<p>即使是一个普通的 Go 程序，要在裸机上运行，编译过程还是有很多复杂的参数，因此我把这些编译过程封装了一下，编写了一个叫 <code>egg</code> 的程序，用这个程序来编译，打包，运行你自己编写的 Go 语言编写内核。</p>
+<p>即使是一个普通的 Go 程序，要在裸机上运行，编译过程还是有很多复杂的参数，因此我把这些编译过程封装了一下，编写了一个叫 <code>egg</code> 的程序，用这个程序来编译，打包，运行你自己编写的 Go 语言内核。</p>
 <h1 id=使用go语言编写自己的unikernel>使用Go语言编写自己的unikernel</h1>
 <p>eggos 的主仓库里面带了几个示范的例子，在 <a href=https://github.com/icexin/eggos/tree/main/app/examples>examples</a> 目录下，下面一一介绍这些例子。</p>
 <p>其中需要注意的是，机器的环境准备如下：</p>
@@ -241,6 +241,11 @@ $ egg run
 </div>
 <footer class=post-footer>
 <nav class=post-nav>
+<a class=prev href=/post/running-go-application-on-bare-metal/>
+<i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">Running Go Application on Bare Metal</span>
+<span class="prev-text nav-mobile">上一篇</span>
+</a>
 <a class=next href=/post/dlv-gdb-stub/>
 <span class="next-text nav-default">Dlv支持GDB Stub</span>
 <span class="next-text nav-mobile">下一篇</span>

@@ -86,6 +86,23 @@
 <section id=posts class=posts>
 <article class=post>
 <header class=post-header>
+<h1 class=post-title><a class=post-link href=/post/running-go-application-on-bare-metal/>Running Go Application on Bare Metal</a></h1>
+<div class=post-meta>
+<span class=post-time> 2021-08-09 </span>
+</div>
+</header>
+<div class=post-content>
+<div class=post-summary>
+In the process of writing eggos, I found that removing the hardware initialization code, the main program is actually an ordinary Go program. Like other Go programs, the main function is used as the entry point, but it never returns.
+Can other ordinary programs also run on bare metal? The answer is yes. I extracted the kernel code of eggos as a separate Go library. Other applications can run on bare metal like eggos by writing import _ "github.
+</div>
+<div class=read-more>
+<a href=/post/running-go-application-on-bare-metal/ class=read-more-link>阅读更多</a>
+</div>
+</div>
+</article>
+<article class=post>
+<header class=post-header>
 <h1 class=post-title><a class=post-link href=/post/write-your-own-unikernel/>将Go程序跑在裸机上之LibOS</a></h1>
 <div class=post-meta>
 <span class=post-time> 2021-08-08 </span>
